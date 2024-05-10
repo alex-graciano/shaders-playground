@@ -1,5 +1,4 @@
-import PerlinNoiseScene from './perlinNoiseScene';
-import { Scene } from './scene';
+import * as Scenes from '../scenes';
 
 export const SceneBuilder = () => {
     const url = window.location.href;
@@ -7,10 +6,12 @@ export const SceneBuilder = () => {
 
     console.info(`Loading ${scene} scene...`)
     switch (scene) {
-        case "perlinNoise":
-            return new PerlinNoiseScene();
+        case "noise":
+            return new Scenes.PerlinNoiseScene();
+        case "fbm":
+            return new Scenes.FractalBrownianMotionScene();
         default:
-            return new Scene();
+            return new Scenes.Scene();
     }
     
 }
