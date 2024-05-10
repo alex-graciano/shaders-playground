@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './public/scene.js',
+  entry: './public/sketch.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -10,7 +10,8 @@ module.exports = {
   devServer: {
     static: {
         directory: path.join(__dirname, 'public'),
-    },    compress: true,
+    }, 
+    compress: true,
     port: 8080,
     open: true,
     historyApiFallback: {

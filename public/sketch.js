@@ -1,24 +1,13 @@
-import { Pane } from 'tweakpane'
+import * as Scenes from './scenes';
 
 let container;
 let camera, scene, renderer, clock;
-let uniforms;
+let uniforms, fragmentMaterial;
 
-const params = {
-    cols: 10,
-    rows: 10,
-    scaleMin: 1,
-    scaleMax : 30,
-    frequency: 0.001,
-    amplitude: 0.2,
-    animate: true,
-    frame: 0,
-    lineCap: 'butt'
-  }
-
+const shaderScene = new Scenes.PerlinNoiseScene();
   
-  async function init() {
-      container = document.body;
+async function init() {
+    container = document.body;
 
     camera = new THREE.Camera();
     camera.position.z = 1;
@@ -28,13 +17,14 @@ const params = {
     
     const geometry = new THREE.PlaneBufferGeometry( 2, 2 );
     
-    const vShader = './shaders/vertex.glsl';
-    const fShader = './shaders/fragment.glsl';
+    const vShader = shaderScene.getVertexShader();
+    const fShader = shaderScene.getFragmentShader();
     
     uniforms = {
-        u_time: { type: "f", value: 1.0 },
+        u_time: {type: "f", value: 1.0},
         u_resolution: { type: "v2", value: new THREE.Vector2() },
-        u_mouse: { type: "v2", value: new THREE.Vector2() }
+        u_mouse: { type: "v2", value: new THREE.Vector2() },
+        ...shaderScene.getUniforms()
     };
     
     const vertexShader = await fetch(vShader);
@@ -44,13 +34,13 @@ const params = {
     const fragmentShaderText = await fragmentShader.text();
     
     
-    const material = new THREE.ShaderMaterial( {
+    fragmentMaterial = new THREE.ShaderMaterial( {
         uniforms: uniforms,
         vertexShader: vertexShaderText,
         fragmentShader: fragmentShaderText
     } );
 
-    const mesh = new THREE.Mesh( geometry, material );
+    const mesh = new THREE.Mesh( geometry, fragmentMaterial );
     scene.add( mesh );
 
     renderer = new THREE.WebGLRenderer();
@@ -75,32 +65,15 @@ function onWindowResize( event ) {
 
 function animate() {
     requestAnimationFrame( animate );
+    shaderScene.preRender(uniforms);
     render();
+    shaderScene.postRender(uniforms);
 }
 
 function render() {
-    uniforms.u_time.value += clock.getDelta();
+    uniforms.u_time.value += (shaderScene.shouldAnimate() * clock.getDelta());
     renderer.render( scene, camera );
 }
 
-function createGUI() {
-    const pane = new Pane();
-    let folder;
-
-    folder = pane.addFolder({ title: 'Grid' });
-    folder.addBinding(params, 'lineCap', {options: {butt: 'butt', round: 'round', square: 'square'}});
-    folder.addBinding(params, 'cols', {min: 2, max: 50, step: 1});
-    folder.addBinding(params, 'rows', {min: 2, max: 50, step: 1});
-    folder.addBinding(params, 'scaleMin', {min: 1, max: 100, step: 1});
-    folder.addBinding(params, 'scaleMax', {min: 1, max: 100, step: 1});
-    
-    folder = pane.addFolder({ title: 'Noise' });
-    folder.addBinding(params, 'frequency', {min: -0.01, max: 0.01});
-    folder.addBinding(params, 'amplitude', {min: 0, max: 1});
-    folder.addBinding(params, 'animate');
-    folder.addBinding(params, 'frame', {min: 0, max: 999});
-    
-}
-
-createGUI();
+shaderScene.createGUI();
 init().then(() => animate());
