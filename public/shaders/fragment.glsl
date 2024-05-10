@@ -13,10 +13,7 @@ float plot(vec2 st) {
 
 void main() {
 	vec2 st = gl_FragCoord.xy/u_resolution;
-
     float y = st.x;
-
-
     vec3 color = vec3(y);
 
     // Plot a line

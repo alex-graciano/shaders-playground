@@ -1,10 +1,10 @@
-import * as Scenes from './scenes';
+import {SceneBuilder} from './scenes';
 
 let container;
 let camera, scene, renderer, clock;
 let uniforms, fragmentMaterial;
 
-const shaderScene = new Scenes.PerlinNoiseScene();
+const shaderScene = SceneBuilder();
   
 async function init() {
     container = document.body;
@@ -65,9 +65,9 @@ function onWindowResize( event ) {
 
 function animate() {
     requestAnimationFrame( animate );
-    shaderScene.preRender(uniforms);
+    shaderScene.preRender();
     render();
-    shaderScene.postRender(uniforms);
+    shaderScene.postRender();
 }
 
 function render() {

@@ -2,8 +2,7 @@ import { Scene } from "./scene";
 import { Pane } from 'tweakpane'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials';
 
-export class PerlinNoiseScene extends Scene {
-    vertexShader = './../shaders/vertex.glsl';
+export default class PerlinNoiseScene extends Scene {
     fragmentShader = './../shaders/perlinNoise/fragment.glsl';
 
     fpsGraph;
@@ -21,16 +20,16 @@ export class PerlinNoiseScene extends Scene {
         debug: false,
         animate: true
     };
+
+    uniforms = {
+        u_debug: { type: "b", value: this.params.debug },
+        u_noise: { type: "i", value: this.perlinList.value}
+    }
  
-    
-    getVertexShader() { return this.vertexShader}
     getFragmentShader() { return this.fragmentShader }
 
     getUniforms() {
-        return {
-            u_debug: { type: "b", value: this.params.debug },
-            u_noise: { type: "i", value: this.perlinList.value}
-        }
+        return this.uniforms;
     }
     
     createGUI() {
@@ -56,13 +55,13 @@ export class PerlinNoiseScene extends Scene {
         });
     }
 
-    preRender(uniforms) {
+    preRender() {
         this.fpsGraph.begin();
-        uniforms.u_debug.value = this.params.debug;
-        uniforms.u_noise.value = this.perlinList.value;
+        this.uniforms.u_debug.value = this.params.debug;
+        this.uniforms.u_noise.value = this.perlinList.value;
     }
 
-    postRender(uniforms) {
+    postRender() {
         this.fpsGraph.end();
     }
 
