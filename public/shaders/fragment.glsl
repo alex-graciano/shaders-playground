@@ -3,8 +3,6 @@ precision mediump float;
 #endif
 
 uniform vec2 u_resolution;
-uniform vec2 u_mouse;
-uniform float u_time;
 
 // Plot a line on Y using a value between 0.0-1.0
 float plot(vec2 st) {    
