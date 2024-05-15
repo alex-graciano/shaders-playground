@@ -13,7 +13,7 @@ uniform float u_time;
 uniform bool u_debug;
 uniform int u_noise;
 
-vec2 randomGradient(vec2 p) {
+vec2 randomGradient(vec2 p, int type) {
     p = p + 0.1;
     float x = dot(p, vec2(123.4, 234.5));
     float y = dot(p, vec2(234.5, 345.6));
@@ -23,6 +23,18 @@ vec2 randomGradient(vec2 p) {
     
     gradient = sin(gradient + u_time);
 
+    /*
+    if (type == 1) { // BL
+        gradient = gradient + vec2(0.5, 0.5);
+    } else if (type == 2) { // BR
+        gradient = gradient + vec2(-0.5, 0.5);
+    } else if (type == 3) { // TL
+        gradient = gradient + vec2(0.5, -0.5);
+    } else { // TR
+        gradient = gradient + vec2(-0.5, -0.5);
+    }
+    */
+    
     return gradient;
 }
 
@@ -77,10 +89,10 @@ void main() {
     vec2 tr = gridId + vec2(1.0, 1.0);
 
     // Create a random gradient for every corner
-    vec2 gradBl = randomGradient(bl);
-    vec2 gradBr = randomGradient(br);
-    vec2 gradTl = randomGradient(tl);
-    vec2 gradTr = randomGradient(tr);
+    vec2 gradBl = randomGradient(bl, 1);
+    vec2 gradBr = randomGradient(br, 2);
+    vec2 gradTl = randomGradient(tl, 3);
+    vec2 gradTr = randomGradient(tr, 4);
 
     // Visualize gradients
     vec2 gridCell = gridId + gridUv;
@@ -89,7 +101,7 @@ void main() {
     float distG3 = sdOrientedBox(gridCell, tl, tl + gradTl * 0.5, 0.01);
     float distG4 = sdOrientedBox(gridCell, tr, tr + gradTr * 0.5, 0.01);
     float isOnGradient = step(0.0, distG1) * step(0.0, distG2) * step(0.0, distG3) * step(0.0, distG4);
-
+    
     // Visualize the center of each cell grid
     float radius = 0.02;
     vec2 gridCenter = (tr + bl) * 0.5;

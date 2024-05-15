@@ -18,7 +18,34 @@ export class PerlinNoiseScene extends Scene {
 
     params = {
         debug: false,
-        animate: true
+        animate: false,
+        vectors: {
+            v00: {x: 0.5, y: 0.5},
+            v01: {x: 0.5, y: 0.5},
+            v02: {x: 0.5, y: 0.5},
+            v03: {x: 0.5, y: 0.5},
+            v04: {x: 0.5, y: 0.5},
+            v00: {x: 0.5, y: 0.5},
+            v11: {x: 0.5, y: 0.5},
+            v12: {x: 0.5, y: 0.5},
+            v13: {x: 0.5, y: 0.5},
+            v14: {x: 0.5, y: 0.5},
+            v20: {x: 0.5, y: 0.5},
+            v21: {x: 0.5, y: 0.5},
+            v22: {x: 0.5, y: 0.5},
+            v23: {x: 0.5, y: 0.5},
+            v24: {x: 0.5, y: 0.5},
+            v30: {x: 0.5, y: 0.5},
+            v31: {x: 0.5, y: 0.5},
+            v32: {x: 0.5, y: 0.5},
+            v33: {x: 0.5, y: 0.5},
+            v34: {x: 0.5, y: 0.5},
+            v40: {x: 0.5, y: 0.5},
+            v41: {x: 0.5, y: 0.5},
+            v42: {x: 0.5, y: 0.5},
+            v43: {x: 0.5, y: 0.5},
+            v44: {x: 0.5, y: 0.5},
+        }
     };
 
     uniforms = {
@@ -47,6 +74,12 @@ export class PerlinNoiseScene extends Scene {
             options: this.PERLIN_NOISE,
             value: this.PERLIN_NOISE[0].value,
         });
+
+        folder = pane.addFolder({ title: 'Divergence vectors' });
+        for (const [key, _] of Object.entries(this.params.vectors)) {
+            folder.addBinding(this.params.vectors, key, {x: {min: -1, max: 1, offset: 0.001}, y: {min: -1, max: 1, offset: 0.001}});
+        }
+
     
         this.fpsGraph = pane.addBlade({
             view: 'fpsgraph',
