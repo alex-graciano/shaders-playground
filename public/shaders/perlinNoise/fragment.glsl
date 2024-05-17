@@ -8,10 +8,24 @@
 precision mediump float;
 #endif
 
+#define N_VECTORS 5
+
 uniform vec2 u_resolution;
 uniform float u_time;
 uniform bool u_debug;
 uniform int u_noise;
+uniform vec2 u_divergenceVectors[N_VECTORS * N_VECTORS];
+
+int index1D(int x, int y) {
+    return y * N_VECTORS + x;
+
+}
+
+vec2 sampleGradient(vec2 p) {
+    int index = index1D(int(p.x), int(p.y));
+
+    return u_divergenceVectors[index];
+}
 
 vec2 randomGradient(vec2 p, int type) {
     p = p + 0.1;
@@ -89,10 +103,14 @@ void main() {
     vec2 tr = gridId + vec2(1.0, 1.0);
 
     // Create a random gradient for every corner
-    vec2 gradBl = randomGradient(bl, 1);
-    vec2 gradBr = randomGradient(br, 2);
-    vec2 gradTl = randomGradient(tl, 3);
-    vec2 gradTr = randomGradient(tr, 4);
+    //vec2 gradBl = randomGradient(bl, 1);
+    //vec2 gradBr = randomGradient(br, 2);
+    //vec2 gradTl = randomGradient(tl, 3);
+    //vec2 gradTr = randomGradient(tr, 4);
+    vec2 gradBl = sampleGradient(bl);
+    vec2 gradBr = sampleGradient(br);
+    vec2 gradTl = sampleGradient(tl);
+    vec2 gradTr = sampleGradient(tr);
 
     // Visualize gradients
     vec2 gridCell = gridId + gridUv;
