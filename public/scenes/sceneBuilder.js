@@ -6,8 +6,10 @@ export const SceneBuilder = () => {
 
     console.info(`Loading ${scene} scene...`)
     switch (scene) {
-        case "noise":
+        case "perlin":
             return new Scenes.PerlinNoiseScene();
+        case "warping":
+            return new Scenes.DomainWarpingScene();
         case "fbm":
             return new Scenes.FractalBrownianMotionScene();
         default:

@@ -47,7 +47,7 @@ export class FractalBrownianMotionScene extends Scene {
         let folder;
 
         folder = pane.addFolder({ title: 'Noise' });
-        folder.addBinding(this.params.noise, 'vec2Hash', {x: {min: 0, max: 10, offset: 0.001}, y: {min: -10, max: 10, offset: 0.001}});
+        folder.addBinding(this.params.noise, 'vec2Hash', {x: {min: 0, max: 10, offset: 0.001}, y: {min: -10, max: 10, offset: 0.001, inverted: true}});
         folder.addBinding(this.params.noise, 'vec1Hash', {min: 10000, max: 50000, step: 0.05});
         folder.addBinding(this.params.noise, 'spacePartitions', {min: 1, max: 20, step: 1.0});
         

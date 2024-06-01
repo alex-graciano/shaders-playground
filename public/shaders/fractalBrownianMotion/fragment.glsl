@@ -127,6 +127,31 @@ float perlinNoise(in vec2 st) {
 }
 
 
+mat2 rotate2d(float angle){
+    return mat2(cos(angle),-sin(angle),
+                sin(angle),cos(angle));
+}
+
+float lines(in vec2 pos, float b){
+    float scale = 2.0;
+    pos *= scale;
+    return smoothstep(0.0,
+                    .5+b*.5,
+                    abs((sin(pos.x*3.1415)+b*2.0))*.5);
+}
+
+float linesNoise(in vec2 st) {
+    vec2 pos = st.yx*vec2(1.,2.);
+
+    // Add noise
+    pos = rotate2d( noise(pos) ) * pos;
+
+    // Draw lines
+    return lines(pos,.1);
+
+}
+
+
 float fbm (in vec2 st) {
     // Initial values
     float value = 0.0;
@@ -135,7 +160,7 @@ float fbm (in vec2 st) {
     
     // Loop of octaves
     for (int i = 0; i < u_octaves; i++) {
-        value += amplitude * (rigdedNoise(perlinNoise(st * frequency)));
+        value += amplitude * perlinNoise(st * frequency);
         st *= u_step;
         amplitude *= u_gain;
         frequency *= u_lacunarity;
