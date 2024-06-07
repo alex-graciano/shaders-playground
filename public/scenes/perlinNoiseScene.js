@@ -3,11 +3,14 @@ import { Pane } from 'tweakpane'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials';
 
 export class PerlinNoiseScene extends Scene {
+    MIN_VECTOR = -0.5;
+    MAX_VECTOR = 0.5;
+
     fragmentShader = '../shaders/noise/perlinNoiseFragment.glsl';
     
     fpsGraph;
     perlinList = {
-        value: 2
+        value: 0
     };
 
     PERLIN_NOISE = [
@@ -53,9 +56,8 @@ export class PerlinNoiseScene extends Scene {
             step: 2.5
         },
         noise: {
-            vec2Hash: {x: 1.9898, y: 7.233 },
-            vec1Hash: 43778.543123,
-            spacePartitions: 3.0
+            spacePartitions: 1.0,
+            length: 1.0
         }
     };
 
@@ -72,17 +74,12 @@ export class PerlinNoiseScene extends Scene {
         
         // noise uniforms
         u_spacePartitions: {type: "f", value: this.params.noise.spacePartitions},
-        u_1dhash: {type: "f", value: this.params.noise.vec1Hash},
-        u_2dhash: {type: "v2", value: new THREE.Vector2(
-            this.params.noise.vec2Hash.x, this.params.noise.vec2Hash.y
-        )},
+        u_length: {type: "f", value: this.params.noise.length},
     }
 
     randomVector() {
-        const min = 0.0;
-        const max = 100.0;
-        const x = Math.random() * (max - min) + min;
-        const y = Math.random() * (max - min) + min;
+        const x = Math.random() * (this.MAX_VECTOR - this.MIN_VECTOR) + this.MIN_VECTOR;
+        const y = Math.random() * (this.MAX_VECTOR - this.MIN_VECTOR) + this.MIN_VECTOR;
         return {x, y};
     }
 
@@ -112,11 +109,15 @@ export class PerlinNoiseScene extends Scene {
             value: this.PERLIN_NOISE[this.perlinList.value].value,
         });
 
+        folder = pane.addFolder({ title: 'Noise' });
+        folder.addBinding(this.params.noise, 'length', {min: -10.0, max: 10.0, step: 0.05});
+        folder.addBinding(this.params.noise, 'spacePartitions', {min: 1, max: 20, step: 1.0});
+
         folder = pane.addFolder({ title: 'Divergence vectors', expanded: false, });
         for (const [key, _] of Object.entries(this.params.vectors)) {
             folder.addBinding(this.params.vectors, key, {
-                x: {min: 0, max: 200, offset: 1.0},
-                y: {min: 0, max: 200, offset: 1.0, inverted: true}
+                x: {min: this.MIN_VECTOR, max: this.MAX_VECTOR, offset: 1.0},
+                y: {min: this.MIN_VECTOR, max: this.MAX_VECTOR, offset: 1.0, inverted: true}
             });
         }
 
@@ -132,6 +133,9 @@ export class PerlinNoiseScene extends Scene {
         this.fpsGraph.begin();
         this.uniforms.u_debug.value = this.params.debug;
         this.uniforms.u_noise.value = this.perlinList.value;
+        this.uniforms.u_length.value = this.params.noise.length;
+        this.uniforms.u_spacePartitions.value = this.params.noise.spacePartitions;
+        this.uniforms.u_divergenceVectors.value = this.mapVectorsToArray(this.params.vectors);
     }
 
     postRender() {

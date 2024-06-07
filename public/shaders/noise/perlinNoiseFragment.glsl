@@ -14,6 +14,8 @@ uniform vec2 u_resolution;
 uniform float u_time;
 uniform bool u_debug;
 uniform int u_noise;
+uniform float u_length;
+uniform float u_spacePartitions;
 uniform vec2 u_divergenceVectors[N_VECTORS * N_VECTORS];
 
 int index1D(int x, int y) {
@@ -24,7 +26,7 @@ int index1D(int x, int y) {
 vec2 sampleGradient(vec2 p) {
     int index = index1D(int(p.x), int(p.y));
 
-    return u_divergenceVectors[index];
+    return u_divergenceVectors[index] * u_length;
 }
 
 vec2 randomGradient(vec2 p) {
@@ -35,7 +37,7 @@ vec2 randomGradient(vec2 p) {
     gradient = sin(gradient);
     gradient = gradient * 43758.5453;
     
-    gradient = sin(gradient + u_time);
+    gradient = sin(gradient + u_time) * u_length;
     
     return gradient;
 }
@@ -80,7 +82,7 @@ void main() {
     vec3 color = vec3(st, 0.0);
 
     // Set up a cell grid
-    st = st * 4.0;
+    st = st * 4.0 * u_spacePartitions;
     vec2 gridId = floor(st);
     vec2 gridUv = fract(st);
 
@@ -91,14 +93,14 @@ void main() {
     vec2 tr = gridId + vec2(1.0, 1.0);
 
     // Create a random gradient for every corner
-    //vec2 gradBl = randomGradient(bl, 1);
-    //vec2 gradBr = randomGradient(br, 2);
-    //vec2 gradTl = randomGradient(tl, 3);
-    //vec2 gradTr = randomGradient(tr, 4);
-    vec2 gradBl = sampleGradient(bl);
-    vec2 gradBr = sampleGradient(br);
-    vec2 gradTl = sampleGradient(tl);
-    vec2 gradTr = sampleGradient(tr);
+    vec2 gradBl = randomGradient(bl);
+    vec2 gradBr = randomGradient(br);
+    vec2 gradTl = randomGradient(tl);
+    vec2 gradTr = randomGradient(tr);
+    //vec2 gradBl = sampleGradient(bl);
+    //vec2 gradBr = sampleGradient(br);
+    //vec2 gradTl = sampleGradient(tl);
+    //vec2 gradTr = sampleGradient(tr);
 
     // Visualize gradients
     vec2 gridCell = gridId + gridUv;
