@@ -18,5 +18,11 @@ module.exports = {
         index: 'sketch.html'
     }
   },
-  devtool: "source-map"
+  devtool: "source-map",
+  devtool: "source-map",
+  resolve: {
+    fallback: {
+        "fs": false
+    },
+  }
 };

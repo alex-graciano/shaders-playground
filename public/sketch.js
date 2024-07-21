@@ -43,7 +43,9 @@ async function init() {
     const mesh = new THREE.Mesh( geometry, fragmentMaterial );
     scene.add( mesh );
 
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer({
+        preserveDrawingBuffer: true
+    });
     renderer.setPixelRatio( window.devicePixelRatio );
     
     container.appendChild( renderer.domElement );
@@ -55,6 +57,8 @@ async function init() {
         uniforms.u_mouse.value.x = e.pageX
         uniforms.u_mouse.value.y = e.pageY
     }
+
+    shaderScene.setRenderer(renderer);
 }
 
 function onWindowResize( event ) {

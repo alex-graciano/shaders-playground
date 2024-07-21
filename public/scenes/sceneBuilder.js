@@ -12,6 +12,8 @@ export const SceneBuilder = () => {
             return new Scenes.DomainWarpingScene();
         case "fbm":
             return new Scenes.FractalBrownianMotionScene();
+        case "color":
+            return new Scenes.ColorScene();
         default:
             return new Scenes.Scene();
     }
