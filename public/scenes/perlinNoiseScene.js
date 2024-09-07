@@ -3,6 +3,8 @@ import { Pane } from 'tweakpane'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials';
 
 export class PerlinNoiseScene extends Scene {
+    pane = undefined;
+
     MIN_VECTOR = -0.5;
     MAX_VECTOR = 0.5;
 
@@ -94,26 +96,26 @@ export class PerlinNoiseScene extends Scene {
     }
     
     createGUI() {
-        const pane = new Pane();
-        pane.registerPlugin(EssentialsPlugin);
+        this.pane = this.pane ?? new Pane();
+        this.pane.registerPlugin(EssentialsPlugin);
         let folder;
     
-        folder = pane.addFolder({ title: 'Parameters' });
+        folder = this.pane.addFolder({ title: 'Parameters' });
         folder.addBinding(this.params, 'debug');
         folder.addBinding(this.params, 'animate');
     
-        this.perlinList = pane.addBlade({
+        this.perlinList = this.pane.addBlade({
             view: 'list',
             label: 'Perlin noise',
             options: this.PERLIN_NOISE,
             value: this.PERLIN_NOISE[this.perlinList.value].value,
         });
 
-        folder = pane.addFolder({ title: 'Noise' });
+        folder = this.pane.addFolder({ title: 'Noise' });
         folder.addBinding(this.params.noise, 'length', {min: -10.0, max: 10.0, step: 0.05});
         folder.addBinding(this.params.noise, 'spacePartitions', {min: 1, max: 20, step: 1.0});
 
-        folder = pane.addFolder({ title: 'Divergence vectors', expanded: false, });
+        folder = this.pane.addFolder({ title: 'Divergence vectors', expanded: false, });
         for (const [key, _] of Object.entries(this.params.vectors)) {
             folder.addBinding(this.params.vectors, key, {
                 x: {min: this.MIN_VECTOR, max: this.MAX_VECTOR, offset: 1.0},
@@ -122,7 +124,7 @@ export class PerlinNoiseScene extends Scene {
         }
 
     
-        this.fpsGraph = pane.addBlade({
+        this.fpsGraph = this.pane.addBlade({
             view: 'fpsgraph',
             label: 'FPS',
             rows: 2,
@@ -144,5 +146,9 @@ export class PerlinNoiseScene extends Scene {
 
     shouldAnimate() {
         return this.params.animate;
+    }
+
+    hideGUI(flag) {
+        this.pane.hidden = flag;
     }
 }

@@ -12,6 +12,7 @@ precision mediump float;
 #endif
 
 uniform vec2 u_resolution;
+uniform vec2 u_originViewport;
 uniform vec2 u_mouse;
 uniform float u_time;
 
@@ -185,8 +186,8 @@ float pattern( in vec2 p ) {
 
 
 void main() {
-    vec2 st = gl_FragCoord.xy/u_resolution.xy;
-    st.x *= u_resolution.x/u_resolution.y;
+    vec2 st = gl_FragCoord.xy/u_resolution + u_originViewport;
+
     
     vec3 color = vec3(0.0);
     color += pattern(st * u_spacePartitions);

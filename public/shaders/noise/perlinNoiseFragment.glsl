@@ -11,6 +11,7 @@ precision mediump float;
 #define N_VECTORS 5
 
 uniform vec2 u_resolution;
+uniform vec2 u_originViewport;
 uniform float u_time;
 uniform bool u_debug;
 uniform int u_noise;
@@ -78,7 +79,7 @@ float rigdedPerlinNoise(float perlin) {
 
 void main() {
     // We're a ssuming a square resolution for simplicity
-	vec2 st = gl_FragCoord.xy/u_resolution;
+	vec2 st = gl_FragCoord.xy/u_resolution + u_originViewport;
     vec3 color = vec3(st, 0.0);
 
     // Set up a cell grid

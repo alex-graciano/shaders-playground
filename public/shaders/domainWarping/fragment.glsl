@@ -1,3 +1,11 @@
+/**
+    This scene includes code from the following projects:
+    Inigo Quilez https://iquilezles.org/articles/warp/
+
+    This code is an adaptation created by the cited project. All rights reserved
+*/
+
+
 #ifdef GL_ES
 precision mediump float;
 #endif
