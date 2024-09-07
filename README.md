@@ -6,7 +6,12 @@ It uses the simple [Tweakpane](https://tweakpane.github.io/docs/) lib to link pa
 
 The repository has a set of preloaded examples that can be inspected in `./public/scenes/sceneBuilder.js`. By now, the navigation to the projects is done via url paths. It should be noted that this is a personal repository to test PoCs and sketches very quickly so this way is more than enough. Therefore, this is not intended to be a production project or code.
 
+### Examples
 
+| <!-- -->    | <!-- -->    |
+| -------------- | -------------- |
+![](./public/screenshots/fbm_scene.png)  |  ![](./public/screenshots/palette_scene.png)
+|  |  |
 
 ### Execution
 ```
